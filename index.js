@@ -9000,3 +9000,47 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/js-donut-lab/issues/2"
   }
 ];
+
+var issuesWithUpdatedApiUrl = issues.map(function(objj){
+  var obj = Object.assign({},objj);
+  obj.url = obj.url.replace('api.github.com','api-v2.github.com');
+  return obj;
+});
+
+var commentCountAcrossIssues = issues.reduce( function(prev,curr) {
+  var tmp = curr.comments_count;
+  delete curr.comments_count;
+  return prev + tmp;
+},0);
+
+var openIssues = [];
+for (var i = 0, len = issues.length; i < len; i++) {
+  if ( issues[i].state == "open" ) {
+    openIssues.push(issues[i]);
+  }
+}
+
+
+var nonAutomaticIssues = [];
+for (var i = 0, len = issues.length; i < len; i++) {
+  if ( !issues[i].body.match("automatically created by learn.co") ) {
+    nonAutomaticIssues.push(issues[i]);
+  }
+}
+
+// console.log(issues.length);
+// console.log(issuesWithUpdatedApiUrl.length);
+// console.log(commentCountAcrossIssues.length);
+// console.log(openIssues.length);
+// console.log(nonAutomaticIssues.length);
+
+var longtablerow = document.getElementById('results');
+var holder = '';
+for (var i = 0, len = nonAutomaticIssues.length; i < len; i++) {
+    holder = holder + '<tr>\
+      <td>' + nonAutomaticIssues[i].body + '</td>\
+      <td>' + nonAutomaticIssues[i].created_at + '</td>\
+      <td>' + nonAutomaticIssues[i].state + '</td>\
+    </tr>'
+};
+longtablerow.innerHTML += holder;
